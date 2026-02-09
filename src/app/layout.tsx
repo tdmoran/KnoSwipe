@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Syne, Manrope } from 'next/font/google';
+import AuthProvider from '@/components/AuthProvider';
 import './globals.css';
 
 const syne = Syne({
@@ -41,7 +42,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${syne.variable} ${manrope.variable}`}>
-      <body style={{ fontFamily: 'var(--font-body)' }}>{children}</body>
+      <body style={{ fontFamily: 'var(--font-body)' }}>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
