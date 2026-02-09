@@ -51,7 +51,7 @@ export default function FlashCard({ card, isActive }: Props) {
 
           <div className="flashcard-face flashcard-back">
             <div className="flashcard-face-label" style={{ color }}>Answer</div>
-            <h3 style={{ whiteSpace: 'pre-line' }}>{card.back}</h3>
+            <h3>{card.back}</h3>
             {card.bonus && <p className="flashcard-bonus">{card.bonus}</p>}
           </div>
         </motion.div>
