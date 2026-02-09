@@ -238,9 +238,18 @@ export default function SwipeDeck() {
         </motion.button>
       </div>
 
-      {/* Card counter */}
+      {/* Card counter with progress ring */}
       <div className="card-counter">
-        {activeIndex + 1} / {filteredCards.length}
+        <svg className="progress-ring" viewBox="0 0 28 28">
+          <circle className="progress-ring-bg" cx="14" cy="14" r="11" />
+          <circle
+            className="progress-ring-fill"
+            cx="14" cy="14" r="11"
+            strokeDasharray={`${2 * Math.PI * 11}`}
+            strokeDashoffset={`${2 * Math.PI * 11 * (1 - (activeIndex + 1) / filteredCards.length)}`}
+          />
+        </svg>
+        <span>{activeIndex + 1}/{filteredCards.length}</span>
       </div>
 
       {/* Swipe hint */}
