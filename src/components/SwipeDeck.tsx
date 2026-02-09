@@ -28,10 +28,13 @@ export default function SwipeDeck() {
   const [cardsLoading, setCardsLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
+  const [seenCards, setSeenCards] = useState<Set<string>>(new Set());
+  const [showAllCards, setShowAllCards] = useState(false);
   const [streak, setStreak] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [showHint, setShowHint] = useState(true);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const markedSeenRef = useRef<Set<string>>(new Set());
 
   // Fetch cards from API, fallback to static
   useEffect(() => {
@@ -51,7 +54,12 @@ export default function SwipeDeck() {
 
   // Fetch progress when logged in
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setSeenCards(new Set());
+      setBookmarked(new Set());
+      markedSeenRef.current = new Set();
+      return;
+    }
     fetch('/api/progress')
       .then((r) => {
         if (!r.ok) throw new Error('API error');
@@ -59,19 +67,44 @@ export default function SwipeDeck() {
       })
       .then((data: Record<string, ProgressEntry>) => {
         const bm = new Set<string>();
+        const seen = new Set<string>();
         for (const [cardId, entry] of Object.entries(data)) {
           if (entry.bookmarked) bm.add(cardId);
+          if (entry.times_seen > 0 && !entry.bookmarked) seen.add(cardId);
         }
         setBookmarked(bm);
+        setSeenCards(seen);
+        // Pre-populate markedSeenRef so we don't re-mark already-seen cards
+        markedSeenRef.current = new Set(Array.from(bm).concat(Array.from(seen)));
       })
       .catch(() => {});
   }, [user]);
 
-  const filteredCards = selectedCategory
+  // Filter cards: by category, then by seen status for signed-in users
+  let filteredCards = selectedCategory
     ? allCards.filter((c) => c.category === selectedCategory)
     : allCards;
+  if (user && !showAllCards) {
+    filteredCards = filteredCards.filter((c) => !seenCards.has(c.id));
+  }
 
-  // Intersection Observer for active card tracking
+  // Mark a card as seen (debounced, no duplicates)
+  const markSeen = useCallback(
+    (cardId: string) => {
+      if (!user) return;
+      if (markedSeenRef.current.has(cardId)) return;
+      markedSeenRef.current.add(cardId);
+
+      fetch('/api/progress', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cardId, seen: true }),
+      }).catch(() => {});
+    },
+    [user]
+  );
+
+  // Intersection Observer for active card tracking + auto-mark seen
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -84,6 +117,9 @@ export default function SwipeDeck() {
             if (!isNaN(idx)) {
               setActiveIndex(idx);
               if (showHint) setShowHint(false);
+              // Auto-mark as seen
+              const cardId = entry.target.getAttribute('data-card-id');
+              if (cardId) markSeen(cardId);
             }
           }
         });
@@ -94,7 +130,7 @@ export default function SwipeDeck() {
     const slides = container.querySelectorAll('.card-slide');
     slides.forEach((slide) => observer.observe(slide));
     return () => observer.disconnect();
-  }, [filteredCards, showHint]);
+  }, [filteredCards, showHint, markSeen]);
 
   const toggleBookmark = useCallback(
     (id: string) => {
@@ -110,6 +146,15 @@ export default function SwipeDeck() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ cardId: id, bookmarked: !isBookmarked }),
           }).catch(() => {});
+        }
+
+        // If bookmarking, remove from seenCards so it stays visible
+        if (!isBookmarked) {
+          setSeenCards((prevSeen) => {
+            const nextSeen = new Set(prevSeen);
+            nextSeen.delete(id);
+            return nextSeen;
+          });
         }
 
         return next;
@@ -133,20 +178,56 @@ export default function SwipeDeck() {
     );
   }
 
-  return (
-    <>
-      {/* User menu */}
-      <div className="user-menu">
-        {user ? (
-          <div style={{ position: 'relative' }}>
+  // All cards seen state
+  if (user && filteredCards.length === 0 && !showAllCards) {
+    return (
+      <>
+        {/* Header */}
+        <div className="app-header">
+          <div className="progress-bar">
+            <div className="progress-fill" style={{ width: '100%' }} />
+          </div>
+          <div className="category-pills">
             <button
-              className="user-avatar"
+              className={`pill ${selectedCategory === null ? 'active' : ''}`}
+              onClick={() => setSelectedCategory(null)}
+            >
+              All
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                className={`pill ${selectedCategory === cat ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
+                style={
+                  selectedCategory === cat
+                    ? {
+                        background: `${categoryColors[cat]}15`,
+                        borderColor: `${categoryColors[cat]}40`,
+                        color: categoryColors[cat],
+                      }
+                    : undefined
+                }
+              >
+                {categoryLabels[cat]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Action bar with user menu */}
+        <div className="action-bar">
+          <div style={{ position: 'relative' }}>
+            <motion.button
+              className="action-btn user-action-btn"
+              whileTap={{ scale: 0.8 }}
               onClick={() => setShowUserMenu(!showUserMenu)}
+              aria-label="User menu"
             >
               {user.name.charAt(0).toUpperCase()}
-            </button>
+            </motion.button>
             {showUserMenu && (
-              <div className="user-dropdown">
+              <div className="user-dropdown user-dropdown--up">
                 <div className="user-dropdown-name">{user.name}</div>
                 <div className="user-dropdown-email">{user.email}</div>
                 <button
@@ -160,13 +241,29 @@ export default function SwipeDeck() {
               </div>
             )}
           </div>
-        ) : (
-          <Link href="/login">
-            <button className="sign-in-btn">Sign In</button>
-          </Link>
-        )}
-      </div>
+        </div>
 
+        <div className="all-seen-screen">
+          <div className="all-seen-icon">&#x2705;</div>
+          <h2 className="all-seen-title">
+            {selectedCategory ? `All ${categoryLabels[selectedCategory]} cards reviewed!` : "You've reviewed all cards!"}
+          </h2>
+          <p className="all-seen-subtitle">
+            Great work! You can review them again or switch categories.
+          </p>
+          <button
+            className="all-seen-btn"
+            onClick={() => setShowAllCards(true)}
+          >
+            Review Again
+          </button>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
       {/* Header */}
       <div className="app-header">
         <div className="progress-bar">
@@ -236,6 +333,48 @@ export default function SwipeDeck() {
         >
           &#x2197;
         </motion.button>
+
+        {/* User menu in action bar */}
+        {user ? (
+          <div style={{ position: 'relative' }}>
+            <motion.button
+              className="action-btn user-action-btn"
+              whileTap={{ scale: 0.8 }}
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              aria-label="User menu"
+            >
+              {user.name.charAt(0).toUpperCase()}
+            </motion.button>
+            {showUserMenu && (
+              <div className="user-dropdown user-dropdown--up">
+                <div className="user-dropdown-name">{user.name}</div>
+                <div className="user-dropdown-email">{user.email}</div>
+                <button
+                  onClick={() => {
+                    logout();
+                    setShowUserMenu(false);
+                  }}
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <Link href="/login">
+            <motion.button
+              className="action-btn"
+              whileTap={{ scale: 0.8 }}
+              aria-label="Sign in"
+              title="Sign in"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </motion.button>
+          </Link>
+        )}
       </div>
 
       {/* Card counter with progress ring */}
@@ -278,6 +417,7 @@ export default function SwipeDeck() {
             key={card.id}
             className={`card-slide card-slide--${card.type}`}
             data-index={index}
+            data-card-id={card.id}
           >
             <CardRenderer
               card={card}

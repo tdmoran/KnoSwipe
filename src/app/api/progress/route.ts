@@ -32,23 +32,35 @@ export async function PUT(request: NextRequest) {
   }
 
   try {
-    const { cardId, bookmarked, completed, difficultyRating } = await request.json();
+    const { cardId, bookmarked, completed, difficultyRating, seen } = await request.json();
 
     if (!cardId) {
       return NextResponse.json({ error: 'cardId is required' }, { status: 400 });
     }
 
-    await query(
-      `INSERT INTO user_progress (user_id, card_id, bookmarked, completed, difficulty_rating, times_seen, last_seen_at)
-       VALUES ($1, $2, $3, $4, $5, 1, now())
-       ON CONFLICT (user_id, card_id) DO UPDATE SET
-         bookmarked = COALESCE($3, user_progress.bookmarked),
-         completed = COALESCE($4, user_progress.completed),
-         difficulty_rating = COALESCE($5, user_progress.difficulty_rating),
-         times_seen = user_progress.times_seen + 1,
-         last_seen_at = now()`,
-      [userId, cardId, bookmarked ?? false, completed ?? false, difficultyRating ?? null]
-    );
+    if (seen) {
+      // Mark as seen only — increment times_seen without touching bookmarked/completed
+      await query(
+        `INSERT INTO user_progress (user_id, card_id, bookmarked, completed, difficulty_rating, times_seen, last_seen_at)
+         VALUES ($1, $2, false, false, null, 1, now())
+         ON CONFLICT (user_id, card_id) DO UPDATE SET
+           times_seen = user_progress.times_seen + 1,
+           last_seen_at = now()`,
+        [userId, cardId]
+      );
+    } else {
+      await query(
+        `INSERT INTO user_progress (user_id, card_id, bookmarked, completed, difficulty_rating, times_seen, last_seen_at)
+         VALUES ($1, $2, $3, $4, $5, 1, now())
+         ON CONFLICT (user_id, card_id) DO UPDATE SET
+           bookmarked = COALESCE($3, user_progress.bookmarked),
+           completed = COALESCE($4, user_progress.completed),
+           difficulty_rating = COALESCE($5, user_progress.difficulty_rating),
+           times_seen = user_progress.times_seen + 1,
+           last_seen_at = now()`,
+        [userId, cardId, bookmarked ?? false, completed ?? false, difficultyRating ?? null]
+      );
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {
