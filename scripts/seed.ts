@@ -29,7 +29,8 @@ async function seed() {
 
   // Seed cards
   console.log(`Seeding ${cards.length} cards...`);
-  for (const card of cards) {
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
     // Extract a title for the cards table
     let title: string;
     if ('title' in card) {
@@ -45,15 +46,16 @@ async function seed() {
     }
 
     await pool.query(
-      `INSERT INTO cards (id, type, category, difficulty, title, data)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO cards (id, type, category, difficulty, title, data, sequence)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
        ON CONFLICT (id) DO UPDATE SET
          type = EXCLUDED.type,
          category = EXCLUDED.category,
          difficulty = EXCLUDED.difficulty,
          title = EXCLUDED.title,
-         data = EXCLUDED.data`,
-      [card.id, card.type, card.category, card.difficulty, title, JSON.stringify(card)]
+         data = EXCLUDED.data,
+         sequence = EXCLUDED.sequence`,
+      [card.id, card.type, card.category, card.difficulty, title, JSON.stringify(card), i]
     );
     console.log(`  + ${card.id}`);
   }

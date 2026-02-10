@@ -3,6 +3,7 @@ import { type CardData } from '@/data/cards';
 import AnimatedTextCard from './cards/AnimatedTextCard';
 import AnatomyCard from './cards/AnatomyCard';
 import QuizCard from './cards/QuizCard';
+import ImageQuizCard from './cards/ImageQuizCard';
 import FlashCard from './cards/FlashCard';
 import SurgicalStepsCard from './cards/SurgicalStepsCard';
 import FillBlankCard from './cards/FillBlankCard';
@@ -21,6 +22,8 @@ export default function CardRenderer({ card, isActive, onCorrectAnswer }: Props)
       return <AnatomyCard card={card} isActive={isActive} />;
     case 'quiz':
       return <QuizCard card={card} isActive={isActive} onCorrectAnswer={onCorrectAnswer} />;
+    case 'image-quiz':
+      return <ImageQuizCard card={card} isActive={isActive} onCorrectAnswer={onCorrectAnswer} />;
     case 'flashcard':
       return <FlashCard card={card} isActive={isActive} />;
     case 'surgical-steps':

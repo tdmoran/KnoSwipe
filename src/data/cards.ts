@@ -85,13 +85,27 @@ export interface AnatomyCardData {
   structures: AnatomyStructure[];
 }
 
+export interface ImageQuizCardData {
+  id: string;
+  type: 'image-quiz';
+  category: Category;
+  difficulty: Difficulty;
+  imageUrl: string;
+  stem: string;
+  options: QuizOption[];
+  correctIndex: number;
+  explanation: string;
+  imageCaption?: string;
+}
+
 export type CardData =
   | AnimatedTextCardData
   | QuizCardData
   | FlashCardData
   | SurgicalStepsCardData
   | FillBlankCardData
-  | AnatomyCardData;
+  | AnatomyCardData
+  | ImageQuizCardData;
 
 export const categoryLabels: Record<Category, string> = {
   laryngology: 'Laryngology',
@@ -116,6 +130,328 @@ export const difficultyColors: Record<Difficulty, string> = {
 // All previous cards moved to /MadeCards/cards.ts
 // European Manual of ORL-HNS — Head & Neck (100 cards)
 export const cards: CardData[] = [
+
+
+  // ═══════════════════════════════════════════════════════════════════
+  // EUROPEAN MANUAL — CHAPTER 6: HEAD & NECK SURGERY (REAL IMAGES)
+  // ═══════════════════════════════════════════════════════════════════
+
+  // ─── ANATOMY & CLINICAL FOUNDATIONS ────────────────────────────────
+
+  {
+    id: 'euro-hn-lymph-node-levels',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'medium',
+    imageUrl: '/images/head-neck/neck-lymph-node-levels.png',
+    imageCaption: 'Cervical lymph node classification diagram',
+    stem: 'This diagram shows the neck lymph node levels. Which level is the primary drainage for oral tongue SCC?',
+    options: [
+      { label: 'A', text: 'Levels I-III (submandibular and upper/mid jugular)' },
+      { label: 'B', text: 'Level VI only (central compartment)' },
+      { label: 'C', text: 'Level V (posterior triangle)' },
+      { label: 'D', text: 'Level IV (lower jugular)' },
+    ],
+    correctIndex: 0,
+    explanation: 'Oral tongue SCC drains primarily to levels I (submandibular), II (upper jugular), and III (mid jugular). Level I is first echelon, but elective neck dissection typically includes I-III. Level III is the most commonly involved level across all H&N subsites. Oral cavity rarely drains to level IV or V without involving levels I-III first.',
+  },
+
+  {
+    id: 'euro-hn-facial-muscles',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'easy',
+    imageUrl: '/images/head-neck/facial-muscles-anatomy.jpeg',
+    imageCaption: 'Facial muscles — perioral region',
+    stem: 'This anatomy diagram shows the perioral muscles. The M. buccinator is innervated by which nerve?',
+    options: [
+      { label: 'A', text: 'Facial nerve (CN VII) — buccal branch' },
+      { label: 'B', text: 'Trigeminal nerve (CN V3) — buccal nerve' },
+      { label: 'C', text: 'Hypoglossal nerve (CN XII)' },
+      { label: 'D', text: 'Glossopharyngeal nerve (CN IX)' },
+    ],
+    correctIndex: 0,
+    explanation: 'M. buccinator is innervated by the buccal branch of the facial nerve (CN VII), which provides motor innervation. The buccal nerve from CN V3 provides sensory innervation to the buccal mucosa and skin but does NOT innervate the buccinator muscle. All muscles of facial expression are innervated by CN VII.',
+  },
+
+  {
+    id: 'euro-hn-submandibular-anatomy',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'medium',
+    imageUrl: '/images/head-neck/submandibular-anatomy.jpeg',
+    imageCaption: 'Submandibular region anatomy — floor of mouth',
+    stem: 'This diagram shows Wharton duct (ductus submandibularis). What is the most common site for submandibular salivary stones?',
+    options: [
+      { label: 'A', text: 'Wharton duct (80% of all salivary stones occur in submandibular system)' },
+      { label: 'B', text: 'Stensen duct (parotid)' },
+      { label: 'C', text: 'Sublingual gland ducts' },
+      { label: 'D', text: 'Minor salivary glands' },
+    ],
+    correctIndex: 0,
+    explanation: 'Submandibular stones account for 80% of all salivary stones. Wharton duct is long, dependent, and carries alkaline calcium-rich saliva → predisposes to stone formation. Stones cause obstructive sialadenitis → painful swelling during meals. Diagnosis: ultrasound or CT. Treatment: sialendoscopy with retrieval, or gland excision if recurrent or stone >1cm in hilum.',
+  },
+
+  // ─── BENIGN ORAL/PHARYNGEAL CONDITIONS ─────────────────────────────
+
+  {
+    id: 'euro-hn-geographic-tongue',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'easy',
+    imageUrl: '/images/head-neck/geographic-tongue-correct.jpeg',
+    imageCaption: 'Clinical photograph — dorsum of tongue',
+    stem: 'This tongue appearance with irregular erythematous patches and white borders. What is the diagnosis?',
+    options: [
+      { label: 'A', text: 'Geographic tongue (benign migratory glossitis) — no treatment needed' },
+      { label: 'B', text: 'Oral candidiasis — requires antifungals' },
+      { label: 'C', text: 'Erythroplakia — high-grade dysplasia, requires biopsy' },
+      { label: 'D', text: 'Lichen planus — autoimmune condition' },
+    ],
+    correctIndex: 0,
+    explanation: 'Geographic tongue (benign migratory glossitis) is a benign inflammatory condition with characteristic map-like pattern of irregular erythematous areas (depapillation) surrounded by white/yellow borders. Painless, asymptomatic, waxes and wanes. Affects 1-3% of population. No treatment needed. Reassure patient. Differential includes oral candidiasis (can be scraped off), erythroplakia (persistent, requires biopsy), oral lichen planus (white reticular pattern).',
+  },
+
+  {
+    id: 'euro-hn-palatal-pathology',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'medium',
+    imageUrl: '/images/head-neck/palatal-pathology.jpeg',
+    imageCaption: 'Intraoral view — soft palate and uvula',
+    stem: 'This patient has asymmetric palatal elevation and uvular deviation. Most likely diagnosis?',
+    options: [
+      { label: 'A', text: 'Peritonsillar abscess (quinsy) — uvula deviates AWAY from abscess' },
+      { label: 'B', text: 'Vagal nerve palsy — uvula deviates TOWARD the lesion' },
+      { label: 'C', text: 'Parapharyngeal space abscess' },
+      { label: 'D', text: 'Normal variant' },
+    ],
+    correctIndex: 0,
+    explanation: 'Peritonsillar abscess (quinsy) causes uvular deviation AWAY from the affected side due to medial displacement of the tonsil and peritonsillar swelling. Classic presentation: severe odynophagia, trismus, "hot potato" voice, uvular deviation. Most are superior and lateral to the tonsil. Treatment: needle aspiration or I&D + IV antibiotics. Vagal nerve palsy causes uvular deviation TOWARD the lesion (weak side).',
+  },
+
+  // ─── MALIGNANT TUMOURS ─────────────────────────────────────────────
+
+  {
+    id: 'euro-hn-tongue-base-mass',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'hard',
+    imageUrl: '/images/head-neck/tongue-base-mass.jpeg',
+    imageCaption: 'Endoscopic view — tongue base mass',
+    stem: 'This large tongue base mass. What is the most common histology and associated etiology?',
+    options: [
+      { label: 'A', text: 'Squamous cell carcinoma — HPV-positive oropharyngeal SCC (p16+)' },
+      { label: 'B', text: 'Squamous cell carcinoma — tobacco/alcohol-related (HPV-negative)' },
+      { label: 'C', text: 'Lymphoma — non-Hodgkin B-cell lymphoma' },
+      { label: 'D', text: 'Lingual thyroid — ectopic thyroid tissue' },
+    ],
+    correctIndex: 0,
+    explanation: 'Tongue base is part of the oropharynx. HPV-positive oropharyngeal SCC (p16+) is now the most common head & neck cancer in developed countries, surpassing oral cavity SCC. Classically affects younger non-smokers. Better prognosis than HPV-negative disease. Primary site often small/occult with bulky nodal disease (cystic nodes). Treatment: surgery or chemoradiotherapy. De-escalation trials ongoing for favorable-risk HPV+ disease.',
+  },
+
+  {
+    id: 'euro-hn-oral-cavity-tumor',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'medium',
+    imageUrl: '/images/head-neck/oral-cavity-tumor.jpeg',
+    imageCaption: 'Clinical photograph — buccal mucosa mass',
+    stem: 'This fungating buccal mucosa mass. What is the MOST important T-staging parameter per AJCC 8th edition?',
+    options: [
+      { label: 'A', text: 'Depth of invasion (DOI) — critical for T-staging and predicts occult nodal metastasis' },
+      { label: 'B', text: 'Tumor diameter only' },
+      { label: 'C', text: 'Presence of ulceration' },
+      { label: 'D', text: 'Histologic grade' },
+    ],
+    correctIndex: 0,
+    explanation: 'AJCC 8th edition (2017) introduced depth of invasion (DOI) as THE critical T-staging parameter for oral cavity SCC. DOI is measured from the level of adjacent normal mucosa to the deepest point of invasion. T-staging: T1 (≤2cm AND DOI ≤5mm), T2 (≤2cm OR DOI 5-10mm; or 2-4cm AND DOI ≤10mm), T3 (>4cm OR DOI >10mm). DOI ≥4mm → 20-40% occult nodal risk → elective neck dissection indicated even for cN0.',
+  },
+
+  {
+    id: 'euro-hn-oral-tongue-lesion',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'medium',
+    imageUrl: '/images/head-neck/oral-tongue-lesion.jpeg',
+    imageCaption: 'Clinical photographs — lateral tongue lesions (2 views)',
+    stem: 'These lateral tongue SCC lesions. What is the FIRST echelon lymph node drainage?',
+    options: [
+      { label: 'A', text: 'Level I (submandibular) and Level II (upper jugular)' },
+      { label: 'B', text: 'Level VI (central compartment)' },
+      { label: 'C', text: 'Level III (mid jugular) only' },
+      { label: 'D', text: 'Level V (posterior triangle)' },
+    ],
+    correctIndex: 0,
+    explanation: 'Oral tongue drains primarily to level I (IA submental, IB submandibular) and level II (IIA/IIB upper jugular). Lateral border of tongue is the highest risk site for oral cavity SCC. For cN0 necks with DOI ≥4mm, elective neck dissection levels I-III (±IV) is recommended. Alternatively, sentinel lymph node biopsy can be used. Skip metastases to level III without level I/II involvement are rare (<5%).',
+  },
+
+  {
+    id: 'euro-hn-neck-mass-clinical',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'medium',
+    imageUrl: '/images/head-neck/neck-mass-clinical.jpeg',
+    imageCaption: 'Clinical photograph — lateral neck swelling',
+    stem: 'This lateral neck mass in an adult. What is the differential diagnosis priority?',
+    options: [
+      { label: 'A', text: 'Malignancy (metastatic SCC or lymphoma) — UNTIL PROVEN OTHERWISE' },
+      { label: 'B', text: 'Branchial cyst — most common congenital lesion' },
+      { label: 'C', text: 'Reactive lymphadenopathy — self-limiting' },
+      { label: 'D', text: 'Lipoma — benign soft tissue' },
+    ],
+    correctIndex: 0,
+    explanation: 'In adults >40 years, a lateral neck mass is MALIGNANT until proven otherwise (metastatic SCC, lymphoma). Workup: (1) Full H&N exam including flexible nasolaryngoscopy, (2) Ultrasound ± FNA, (3) CT/MRI neck, (4) PET-CT if concerning for malignancy. If FNA shows SCC → panendoscopy to find primary (most common: oropharynx, hypopharynx, nasopharynx). Branchial cysts are rare in adults and diagnosis of exclusion (requires negative cancer workup + benign pathology).',
+  },
+
+  {
+    id: 'euro-hn-neck-mass-mri',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'hard',
+    imageUrl: '/images/head-neck/neck-mass-mri.jpeg',
+    imageCaption: 'MRI neck — axial and coronal T1 post-contrast',
+    stem: 'This enhancing parapharyngeal space mass. What is the KEY anatomical landmark to differentiate prestyloid from poststyloid lesions?',
+    options: [
+      { label: 'A', text: 'Styloid process — prestyloid (anterolateral) vs poststyloid (posteromedial)' },
+      { label: 'B', text: 'Mandibular ramus' },
+      { label: 'C', text: 'Hyoid bone' },
+      { label: 'D', text: 'Carotid artery position' },
+    ],
+    correctIndex: 0,
+    explanation: 'Parapharyngeal space is divided by the styloid process and tensor-veli-palatini fascia into: PRESTYLOID (anterolateral): fat, V3, internal maxillary artery → tumors = salivary (pleomorphic adenoma of deep parotid lobe), lymph nodes. POSTSTYLOID (posteromedial): carotid sheath (ICA, IJV, vagus), CN IX-XII, sympathetic chain → tumors = paraganglioma, schwannoma, glomus. Knowing this division guides differential diagnosis and surgical approach.',
+  },
+
+  // ─── LARYNGOLOGY ───────────────────────────────────────────────────
+
+  {
+    id: 'euro-hn-laryngeal-polyp',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'easy',
+    imageUrl: '/images/head-neck/laryngeal-polyp.jpeg',
+    imageCaption: 'Flexible laryngoscopy — vocal fold lesion',
+    stem: 'This pedunculated unilateral vocal fold mass. Most likely diagnosis and etiology?',
+    options: [
+      { label: 'A', text: 'Vocal cord polyp — phonotrauma, smoking' },
+      { label: 'B', text: 'Vocal cord nodules — bilateral, mid-cord' },
+      { label: 'C', text: 'Reinke edema — bilateral, diffuse' },
+      { label: 'D', text: 'Laryngeal papilloma — HPV 6/11' },
+    ],
+    correctIndex: 0,
+    explanation: 'Vocal cord polyp: unilateral, pedunculated or sessile mass, typically at mid-membranous cord (maximal vibration point). Etiology: acute phonotrauma (screaming, coughing), chronic voice abuse, smoking. Presents with hoarseness. Histology: edematous stroma, dilated vessels. Treatment: voice rest, voice therapy; microlaryngeal surgery (excision) if persistent. Differential: nodules (bilateral), Reinke edema (bilateral diffuse), papilloma (irregular, verrucous).',
+  },
+
+  {
+    id: 'euro-hn-normal-vocal-cords',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'easy',
+    imageUrl: '/images/head-neck/normal-vocal-cords.jpeg',
+    imageCaption: 'Flexible laryngoscopy — phonation',
+    stem: 'This laryngoscopy shows normal vocal cord closure during phonation. Which muscle is the ONLY abductor?',
+    options: [
+      { label: 'A', text: 'Posterior cricoarytenoid (PCA) — bilateral PCA palsy = airway emergency' },
+      { label: 'B', text: 'Lateral cricoarytenoid (LCA)' },
+      { label: 'C', text: 'Interarytenoid' },
+      { label: 'D', text: 'Thyroarytenoid' },
+    ],
+    correctIndex: 0,
+    explanation: 'Posterior cricoarytenoid (PCA) is the ONLY vocal cord abductor. All other intrinsic laryngeal muscles are adductors or tensors. Bilateral PCA paralysis → both cords midline → stridor, airway obstruction → EMERGENCY requiring tracheostomy. Unilateral PCA paralysis → affected cord paramedian → mild/no symptoms (other cord compensates). All intrinsic muscles innervated by RLN, EXCEPT cricothyroid (external branch SLN).',
+  },
+
+  {
+    id: 'euro-hn-laryngeal-pathology',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'hard',
+    imageUrl: '/images/head-neck/laryngeal-pathology.jpeg',
+    imageCaption: 'Flexible laryngoscopy — bilateral vocal fold edema',
+    stem: 'This bilateral diffuse vocal fold swelling. Most likely diagnosis if chronic smoker?',
+    options: [
+      { label: 'A', text: 'Reinke edema (polypoid corditis) — smoking-related, bilateral' },
+      { label: 'B', text: 'Acute laryngitis — viral/bacterial' },
+      { label: 'C', text: 'Bilateral vocal cord nodules' },
+      { label: 'D', text: 'Laryngeal carcinoma' },
+    ],
+    correctIndex: 0,
+    explanation: 'Reinke edema (polypoid corditis): bilateral diffuse vocal fold swelling due to accumulation of gelatinous fluid in Reinke space (superficial lamina propria). Etiology: chronic smoking (90%), voice abuse, hypothyroidism, GERD. Presents with deep, raspy voice. More common in women 40-60 years. Treatment: smoking cessation, voice therapy; microlaryngeal surgery (cordotomy with evacuation of edema ± vocal fold stripping) if severe. Risk of airway obstruction if massive.',
+  },
+
+  {
+    id: 'euro-hn-vocal-cord-pathology',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'medium',
+    imageUrl: '/images/head-neck/vocal-cord-pathology.jpeg',
+    imageCaption: 'Direct laryngoscopy views — vocal cord lesion assessment',
+    stem: 'These laryngoscopic views show assessment for transglottic extension. What defines T4a laryngeal cancer?',
+    options: [
+      { label: 'A', text: 'Through thyroid cartilage, or invades extralaryngeal tissues (strap muscles, thyroid, trachea, esophagus)' },
+      { label: 'B', text: 'Crossing from supraglottis to glottis (transglottic)' },
+      { label: 'C', text: 'Vocal cord fixation only' },
+      { label: 'D', text: 'Bilateral vocal cord involvement' },
+    ],
+    correctIndex: 0,
+    explanation: 'T4a laryngeal SCC (moderately advanced): invades through thyroid cartilage AND/OR extends to extralaryngeal tissues (strap muscles, thyroid gland, cricoid cartilage, trachea, esophagus). T4b (very advanced): invades prevertebral space, mediastinum, or encases carotid. Note: Transglottic spread (crossing the ventricle from supraglottis to glottis) is T3 for supraglottic primary, not T4. Cord fixation = T3.',
+  },
+
+  // ─── SALIVARY GLAND & THYROID ──────────────────────────────────────
+
+  {
+    id: 'euro-hn-submandibular-surgery',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'medium',
+    imageUrl: '/images/head-neck/submandibular-surgery.jpeg',
+    imageCaption: 'Intraoperative photographs — submandibular gland excision steps',
+    stem: 'These photos show submandibular gland excision. What nerve is MOST at risk during this surgery?',
+    options: [
+      { label: 'A', text: 'Marginal mandibular branch of facial nerve (CN VII)' },
+      { label: 'B', text: 'Hypoglossal nerve (CN XII)' },
+      { label: 'C', text: 'Lingual nerve (CN V3)' },
+      { label: 'D', text: 'Recurrent laryngeal nerve' },
+    ],
+    correctIndex: 0,
+    explanation: 'Submandibular gland excision risks: (1) Marginal mandibular nerve (facial nerve branch) — runs 1-2cm below mandible deep to platysma, can be injured during flap elevation or gland mobilization → lower lip asymmetry. Protect by elevating superficial layer of deep cervical fascia. (2) Lingual nerve — lies superior to gland, can be injured if dissecting Wharton duct proximally. (3) Hypoglossal nerve — lies superolateral, rarely injured. (4) Submandibular ganglion — parasympathetic to gland.',
+  },
+
+  {
+    id: 'euro-hn-thyroid-surgery-complications',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'easy',
+    imageUrl: '/images/head-neck/thyroid-surgery-scar.jpeg',
+    imageCaption: 'Clinical photograph — post-thyroidectomy patient',
+    stem: 'This patient has undergone total thyroidectomy. What is the MOST common complication?',
+    options: [
+      { label: 'A', text: 'Transient hypocalcemia (20-30%) due to hypoparathyroidism' },
+      { label: 'B', text: 'Permanent hypoparathyroidism (1-3%)' },
+      { label: 'C', text: 'Recurrent laryngeal nerve injury (1-2%)' },
+      { label: 'D', text: 'Hematoma requiring re-operation (<1%)' },
+    ],
+    correctIndex: 0,
+    explanation: 'Thyroidectomy complications: (1) Transient hypocalcemia (20-30%) — most common, due to parathyroid ischemia/devascularisation, usually resolves in weeks-months. (2) Permanent hypoparathyroidism (1-3%) — requires lifelong calcium + calcitriol. (3) RLN injury: transient (1-5%), permanent (1-2%) → vocal cord paralysis, aspiration. (4) Hematoma (<1%) — airway emergency if compressive. (5) Seroma, wound infection (rare). (6) Hypothyroidism (expected after total thyroidectomy, not a complication).',
+  },
+
+  {
+    id: 'euro-hn-oropharyngeal-mass',
+    type: 'image-quiz',
+    category: 'head-neck',
+    difficulty: 'hard',
+    imageUrl: '/images/head-neck/oropharyngeal-mass.jpeg',
+    imageCaption: 'Endoscopic view — base of tongue/vallecula mass',
+    stem: 'This base of tongue mass with cervical metastasis in a non-smoker. What test should be ordered?',
+    options: [
+      { label: 'A', text: 'p16 immunohistochemistry — surrogate for HPV status in oropharyngeal SCC' },
+      { label: 'B', text: 'BRAF mutation testing' },
+      { label: 'C', text: 'Thyroglobulin level' },
+      { label: 'D', text: 'EBV serology' },
+    ],
+    correctIndex: 0,
+    explanation: 'p16 immunohistochemistry is the standard surrogate marker for HPV-related oropharyngeal SCC. HPV-positive (p16+) disease: younger non-smokers, better prognosis (70-80% 5-year survival), bulky cystic nodes with small/occult primary, sensitive to chemoRT. HPV-negative: older smokers, poorer prognosis (40-50% 5-year survival). AJCC 8th edition uses separate staging for p16+ vs p16- oropharyngeal SCC. p16+ downstaged due to better prognosis. De-escalation trials ongoing.',
+  },
+
 
   // ─── THYROID & PARATHYROID ──────────────────────────────────────────
 
@@ -2468,4 +2804,6 @@ export const cards: CardData[] = [
       { name: 'Vidian (Pterygoid) Canal', x: 60, y: 30, description: 'Transmits the nerve of the pterygoid canal (Vidian nerve = greater petrosal + deep petrosal nerves). Runs from the foramen lacerum to the pterygopalatine fossa. Key landmark in endoscopic skull base surgery — identifies the petrous ICA superolaterally.' },
     ],
   },
+
+
 ];

@@ -7,9 +7,9 @@ export async function GET(request: NextRequest) {
 
     let rows;
     if (category) {
-      rows = await query('SELECT data FROM cards WHERE category = $1 ORDER BY id', [category]);
+      rows = await query('SELECT data FROM cards WHERE category = $1 ORDER BY sequence', [category]);
     } else {
-      rows = await query('SELECT data FROM cards ORDER BY id');
+      rows = await query('SELECT data FROM cards ORDER BY sequence');
     }
 
     const cards = rows.map((r) => r.data);

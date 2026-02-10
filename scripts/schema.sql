@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS cards (
   category TEXT NOT NULL,
   difficulty TEXT NOT NULL,
   title TEXT NOT NULL,
-  data JSONB NOT NULL
+  data JSONB NOT NULL,
+  sequence INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS user_progress (
