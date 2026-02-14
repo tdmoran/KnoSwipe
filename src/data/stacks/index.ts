@@ -1,5 +1,6 @@
 import type { CardData } from '../types';
 import { meta as euroManualHnMeta, cards as euroManualHnCards } from './euro-manual-hn';
+import { meta as masterclassMeta, cards as masterclassCards } from './masterclass';
 
 export interface StackMeta {
   slug: string;
@@ -15,6 +16,7 @@ export interface Stack {
 
 export const allStacks: Stack[] = [
   { meta: euroManualHnMeta, cards: euroManualHnCards },
+  { meta: masterclassMeta, cards: masterclassCards },
 ];
 
 export function getStack(slug: string): Stack | undefined {
