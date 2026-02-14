@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { type QuizCardData, categoryColors, difficultyColors } from '@/data/cards';
+import { type QuizCardData, categoryColors, difficultyColors } from '@/data/types';
+import styles from './QuizCard.module.css';
 
 interface Props {
   card: QuizCardData;
@@ -23,14 +24,14 @@ export default function QuizCard({ card, isActive, onCorrectAnswer }: Props) {
   };
 
   const optionClass = (i: number) => {
-    if (!answered) return 'quiz-option';
-    if (i === card.correctIndex) return 'quiz-option correct';
-    if (i === selected) return 'quiz-option incorrect';
-    return 'quiz-option dimmed';
+    if (!answered) return styles.option;
+    if (i === card.correctIndex) return `${styles.option} ${styles.correct}`;
+    if (i === selected) return `${styles.option} ${styles.incorrect}`;
+    return `${styles.option} ${styles.dimmed}`;
   };
 
   return (
-    <div className="card-inner quiz-card">
+    <div className="card-inner">
       <div className="card-meta">
         <span className="card-category-badge" style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
           {card.category}
@@ -42,7 +43,7 @@ export default function QuizCard({ card, isActive, onCorrectAnswer }: Props) {
       </div>
 
       <motion.div
-        className="quiz-icon"
+        className={styles.icon}
         initial={{ opacity: 0, scale: 0.5 }}
         animate={isActive ? { opacity: 1, scale: 1 } : { opacity: 0 }}
         transition={{ delay: 0.15, type: 'spring' }}
@@ -51,7 +52,7 @@ export default function QuizCard({ card, isActive, onCorrectAnswer }: Props) {
       </motion.div>
 
       <motion.p
-        className="quiz-stem"
+        className={styles.stem}
         initial={{ opacity: 0, y: 15 }}
         animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0 }}
         transition={{ delay: 0.2 }}
@@ -59,7 +60,7 @@ export default function QuizCard({ card, isActive, onCorrectAnswer }: Props) {
         {card.stem}
       </motion.p>
 
-      <div className="quiz-options">
+      <div className={styles.options}>
         {card.options.map((opt, i) => (
           <motion.button
             key={i}
@@ -70,11 +71,11 @@ export default function QuizCard({ card, isActive, onCorrectAnswer }: Props) {
             whileTap={!answered ? { scale: 0.97 } : undefined}
             onClick={() => handleSelect(i)}
           >
-            <span className="option-label">{opt.label}</span>
-            <span className="option-text">{opt.text}</span>
+            <span className={styles.optionLabel}>{opt.label}</span>
+            <span className={styles.optionText}>{opt.text}</span>
             {answered && i === card.correctIndex && (
               <motion.span
-                className="correct-indicator"
+                className={styles.correctIndicator}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: 'spring', stiffness: 300 }}
@@ -85,7 +86,7 @@ export default function QuizCard({ card, isActive, onCorrectAnswer }: Props) {
             )}
             {answered && i === selected && i !== card.correctIndex && (
               <motion.span
-                className="correct-indicator"
+                className={styles.correctIndicator}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 style={{ color: 'var(--accent-coral)' }}
@@ -100,13 +101,13 @@ export default function QuizCard({ card, isActive, onCorrectAnswer }: Props) {
       <AnimatePresence>
         {showExplanation && (
           <motion.div
-            className="quiz-explanation"
+            className={styles.explanation}
             initial={{ opacity: 0, height: 0, marginTop: 0 }}
             animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
           >
-            <div className="quiz-explanation-label">Explanation</div>
+            <div className={styles.explanationLabel}>Explanation</div>
             <p>{card.explanation}</p>
           </motion.div>
         )}

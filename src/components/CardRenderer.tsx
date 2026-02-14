@@ -1,5 +1,5 @@
 'use client';
-import { type CardData } from '@/data/cards';
+import { type CardData } from '@/data/types';
 import AnimatedTextCard from './cards/AnimatedTextCard';
 import AnatomyCard from './cards/AnatomyCard';
 import QuizCard from './cards/QuizCard';

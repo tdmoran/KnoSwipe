@@ -1,0 +1,89 @@
+.card {
+  align-items: center;
+  cursor: pointer;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+
+.container {
+  width: 100%;
+  max-width: 340px;
+  min-height: 200px;
+  perspective: 1000px;
+}
+
+.flipper {
+  width: 100%;
+  min-height: 200px;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.face {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 20px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid var(--glass-border);
+  min-height: 200px;
+}
+
+.front {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.back {
+  background: linear-gradient(145deg, rgba(0, 229, 160, 0.08), rgba(0, 229, 160, 0.02));
+  transform: rotateY(180deg);
+  border-color: rgba(0, 229, 160, 0.2);
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.back::-webkit-scrollbar {
+  display: none;
+}
+
+.faceLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.face h3 {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.back h3 {
+  color: var(--accent-teal);
+  font-size: 14px;
+}
+
+.bonus {
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  padding-top: 10px;
+  border-top: 1px solid var(--glass-border);
+}
+
+@media (min-width: 768px) {
+  .container { max-width: 400px }
+  .face h3 { font-size: 18px }
+}

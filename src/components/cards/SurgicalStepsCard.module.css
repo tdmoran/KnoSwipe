@@ -1,0 +1,99 @@
+.card {
+  align-items: center;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.stepProgress {
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+  margin-bottom: 24px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.stepDot {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: all 0.3s;
+}
+
+.active,
+.completed {
+  background: var(--accent-teal);
+}
+
+.completed {
+  opacity: 0.4;
+}
+
+.stepContent {
+  text-align: center;
+  padding: 0 8px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.stepNumber {
+  font-size: 40px;
+  font-weight: 800;
+  opacity: 0.3;
+  margin-bottom: 6px;
+  color: var(--accent-teal);
+}
+
+.stepTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.stepDetail {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.stepNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.stepNav button {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.stepNav button:active {
+  transform: scale(0.95);
+}
+
+.stepNav button:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.stepNav span {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+}

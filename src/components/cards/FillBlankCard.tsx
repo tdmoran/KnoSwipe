@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { type FillBlankCardData, categoryColors, difficultyColors } from '@/data/cards';
+import { type FillBlankCardData, categoryColors, difficultyColors } from '@/data/types';
+import styles from './FillBlankCard.module.css';
 
 interface Props {
   card: FillBlankCardData;
@@ -24,14 +25,14 @@ export default function FillBlankCard({ card, isActive, onCorrectAnswer }: Props
   const parts = card.sentence.split('___');
 
   const optionClass = (option: string) => {
-    if (!answered) return 'fill-option';
-    if (option === card.blankWord) return 'fill-option correct';
-    if (option === selected) return 'fill-option incorrect';
-    return 'fill-option dimmed';
+    if (!answered) return styles.option;
+    if (option === card.blankWord) return `${styles.option} ${styles.correct}`;
+    if (option === selected) return `${styles.option} ${styles.incorrect}`;
+    return `${styles.option} ${styles.dimmed}`;
   };
 
   return (
-    <div className="card-inner fill-blank-card">
+    <div className={`card-inner ${styles.card}`}>
       <div className="card-meta">
         <span className="card-category-badge" style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
           {card.category}
@@ -43,7 +44,7 @@ export default function FillBlankCard({ card, isActive, onCorrectAnswer }: Props
       </div>
 
       <motion.div
-        className="fill-blank-label"
+        className={styles.label}
         initial={{ opacity: 0 }}
         animate={isActive ? { opacity: 1 } : { opacity: 0 }}
         transition={{ delay: 0.15 }}
@@ -52,14 +53,14 @@ export default function FillBlankCard({ card, isActive, onCorrectAnswer }: Props
       </motion.div>
 
       <motion.div
-        className="fill-blank-sentence"
+        className={styles.sentence}
         initial={{ opacity: 0, y: 15 }}
         animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0 }}
         transition={{ delay: 0.25 }}
       >
         <span>{parts[0]}</span>
         <motion.span
-          className={`blank-space ${answered ? (isCorrect ? 'correct' : 'incorrect') : ''}`}
+          className={`${styles.blankSpace} ${answered ? (isCorrect ? styles.blankCorrect : styles.blankIncorrect) : ''}`}
           animate={answered ? { scale: [1, 1.08, 1] } : {}}
           transition={{ duration: 0.3 }}
         >
@@ -68,7 +69,7 @@ export default function FillBlankCard({ card, isActive, onCorrectAnswer }: Props
         <span>{parts[1]}</span>
       </motion.div>
 
-      <div className="fill-blank-options">
+      <div className={styles.options}>
         {card.options.map((option, i) => (
           <motion.button
             key={option}

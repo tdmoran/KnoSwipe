@@ -1,0 +1,123 @@
+.icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255, 179, 71, 0.15);
+  color: var(--accent-amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}
+
+.stem {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+  position: relative;
+  font-family: inherit;
+}
+
+.option:active {
+  transform: scale(0.98);
+}
+
+.optionLabel {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.optionText {
+  flex: 1;
+}
+
+.correct {
+  border-color: rgba(0, 229, 160, 0.5);
+  background: rgba(0, 229, 160, 0.08);
+}
+
+.correct .optionLabel {
+  background: rgba(0, 229, 160, 0.2);
+  color: var(--accent-teal);
+}
+
+.incorrect {
+  border-color: rgba(255, 92, 114, 0.5);
+  background: rgba(255, 92, 114, 0.08);
+}
+
+.incorrect .optionLabel {
+  background: rgba(255, 92, 114, 0.2);
+  color: var(--accent-coral);
+}
+
+.dimmed {
+  opacity: 0.35;
+}
+
+.correctIndicator {
+  position: absolute;
+  right: 12px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.explanation {
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--glass-strong);
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  overflow: hidden;
+}
+
+.explanationLabel {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-teal);
+  margin-bottom: 4px;
+}
+
+@media (min-width: 768px) {
+  .stem { font-size: 15px }
+}

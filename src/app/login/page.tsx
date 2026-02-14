@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
+import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -32,34 +33,34 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h1 className="auth-logo">KnoSwipe</h1>
-        <p className="auth-tagline">ENT Learning, One Swipe at a Time</p>
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <h1 className={styles.logo}>KnoSwipe</h1>
+        <p className={styles.tagline}>ENT Learning, One Swipe at a Time</p>
 
-        <div className="auth-tabs">
+        <div className={styles.tabs}>
           <button
-            className={`auth-tab ${mode === 'login' ? 'active' : ''}`}
+            className={`${styles.tab} ${mode === 'login' ? styles.tabActive : ''}`}
             onClick={() => { setMode('login'); setError(''); }}
           >
             Sign In
           </button>
           <button
-            className={`auth-tab ${mode === 'register' ? 'active' : ''}`}
+            className={`${styles.tab} ${mode === 'register' ? styles.tabActive : ''}`}
             onClick={() => { setMode('register'); setError(''); }}
           >
             Register
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className={styles.form}>
           {mode === 'register' && (
             <input
               type="text"
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="auth-input"
+              className={styles.input}
               required
             />
           )}
@@ -68,7 +69,7 @@ export default function LoginPage() {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="auth-input"
+            className={styles.input}
             required
           />
           <input
@@ -76,19 +77,19 @@ export default function LoginPage() {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="auth-input"
+            className={styles.input}
             required
             minLength={6}
           />
 
-          {error && <p className="auth-error">{error}</p>}
+          {error && <p className={styles.error}>{error}</p>}
 
-          <button type="submit" className="auth-submit" disabled={submitting}>
+          <button type="submit" className={styles.submit} disabled={submitting}>
             {submitting ? 'Please wait...' : mode === 'login' ? 'Sign In' : 'Create Account'}
           </button>
         </form>
 
-        <button className="auth-skip" onClick={() => router.push('/')}>
+        <button className={styles.skip} onClick={() => router.push('/')}>
           Continue as Guest
         </button>
       </div>

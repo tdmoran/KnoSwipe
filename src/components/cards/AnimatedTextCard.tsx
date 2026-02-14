@@ -1,6 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
-import { type AnimatedTextCardData, categoryColors, difficultyColors } from '@/data/cards';
+import { type AnimatedTextCardData, categoryColors, difficultyColors } from '@/data/types';
+import styles from './AnimatedTextCard.module.css';
 
 interface Props {
   card: AnimatedTextCardData;
@@ -11,7 +12,7 @@ export default function AnimatedTextCard({ card, isActive }: Props) {
   const color = categoryColors[card.category];
 
   return (
-    <div className="card-inner animated-text-card">
+    <div className="card-inner">
       <div className="card-meta">
         <span className="card-category-badge" style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
           {card.category}
@@ -24,7 +25,7 @@ export default function AnimatedTextCard({ card, isActive }: Props) {
 
       {card.subtitle && (
         <motion.p
-          className="card-subtitle"
+          className={styles.subtitle}
           style={{ color }}
           initial={{ opacity: 0 }}
           animate={isActive ? { opacity: 1 } : { opacity: 0 }}
@@ -35,7 +36,7 @@ export default function AnimatedTextCard({ card, isActive }: Props) {
       )}
 
       <motion.h2
-        className="card-title"
+        className={styles.title}
         initial={{ opacity: 0, y: 30 }}
         animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
         transition={{ delay: 0.25, type: 'spring', stiffness: 100 }}
@@ -43,17 +44,17 @@ export default function AnimatedTextCard({ card, isActive }: Props) {
         {card.title}
       </motion.h2>
 
-      <div className="text-lines">
+      <div className={styles.textLines}>
         {card.lines.map((line, i) => (
           <motion.div
             key={i}
-            className={`text-line ${line.highlight ? 'text-line--highlight' : ''}`}
+            className={`${styles.textLine} ${line.highlight ? styles.highlight : ''}`}
             initial={{ opacity: 0, x: -30 }}
             animate={isActive ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
             transition={{ delay: 0.4 + i * 0.12, type: 'spring', stiffness: 80 }}
           >
             <span
-              className="text-line-bullet"
+              className={styles.bullet}
               style={{ background: line.highlight ? color : 'var(--text-tertiary)' }}
             />
             <span style={line.highlight ? { color } : undefined}>
@@ -65,7 +66,7 @@ export default function AnimatedTextCard({ card, isActive }: Props) {
 
       {card.footnote && (
         <motion.p
-          className="card-footnote"
+          className={styles.footnote}
           initial={{ opacity: 0, y: 10 }}
           animate={isActive ? { opacity: 0.7, y: 0 } : { opacity: 0, y: 10 }}
           transition={{ delay: 0.4 + card.lines.length * 0.12 + 0.2 }}

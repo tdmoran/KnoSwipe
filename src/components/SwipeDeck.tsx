@@ -2,12 +2,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  cards as staticCards,
   categoryLabels,
   categoryColors,
   type CardData,
   type Category,
-} from '@/data/cards';
+} from '@/data/types';
 import { useAuth } from './AuthProvider';
 import CardRenderer from './CardRenderer';
 import Link from 'next/link';
@@ -24,7 +23,7 @@ interface ProgressEntry {
 export default function SwipeDeck() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { user, loading: authLoading, logout } = useAuth();
-  const [allCards, setAllCards] = useState<CardData[]>(staticCards);
+  const [allCards, setAllCards] = useState<CardData[]>([]);
   const [cardsLoading, setCardsLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
   const [bookmarked, setBookmarked] = useState<Set<string>>(new Set());
@@ -46,9 +45,7 @@ export default function SwipeDeck() {
       .then((data: CardData[]) => {
         if (data.length > 0) setAllCards(data);
       })
-      .catch(() => {
-        // Keep static cards as fallback
-      })
+      .catch(() => {})
       .finally(() => setCardsLoading(false));
   }, []);
 

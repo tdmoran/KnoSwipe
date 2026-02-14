@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { type SurgicalStepsCardData, categoryColors, difficultyColors } from '@/data/cards';
+import { type SurgicalStepsCardData, categoryColors, difficultyColors } from '@/data/types';
+import styles from './SurgicalStepsCard.module.css';
 
 interface Props {
   card: SurgicalStepsCardData;
@@ -22,7 +23,7 @@ export default function SurgicalStepsCard({ card, isActive }: Props) {
   };
 
   return (
-    <div className="card-inner surgical-card">
+    <div className={`card-inner ${styles.card}`}>
       <div className="card-meta">
         <span className="card-category-badge" style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
           {card.category}
@@ -34,7 +35,7 @@ export default function SurgicalStepsCard({ card, isActive }: Props) {
       </div>
 
       <motion.h2
-        className="card-title"
+        className={styles.title}
         initial={{ opacity: 0, y: 20 }}
         animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0 }}
         transition={{ delay: 0.2 }}
@@ -42,11 +43,11 @@ export default function SurgicalStepsCard({ card, isActive }: Props) {
         {card.title}
       </motion.h2>
 
-      <div className="step-progress">
+      <div className={styles.stepProgress}>
         {card.steps.map((_, i) => (
           <div
             key={i}
-            className={`step-dot ${i === activeStep ? 'active' : i < activeStep ? 'completed' : ''}`}
+            className={`${styles.stepDot} ${i === activeStep ? styles.active : i < activeStep ? styles.completed : ''}`}
           />
         ))}
       </div>
@@ -54,21 +55,21 @@ export default function SurgicalStepsCard({ card, isActive }: Props) {
       <AnimatePresence mode="wait">
         <motion.div
           key={activeStep}
-          className="step-content"
+          className={styles.stepContent}
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -50 }}
           transition={{ type: 'spring', stiffness: 200, damping: 25 }}
         >
-          <div className="step-number" style={{ color }}>
+          <div className={styles.stepNumber} style={{ color }}>
             {String(activeStep + 1).padStart(2, '0')}
           </div>
-          <h3 className="step-title">{card.steps[activeStep].title}</h3>
-          <p className="step-detail">{card.steps[activeStep].detail}</p>
+          <h3 className={styles.stepTitle}>{card.steps[activeStep].title}</h3>
+          <p className={styles.stepDetail}>{card.steps[activeStep].detail}</p>
         </motion.div>
       </AnimatePresence>
 
-      <div className="step-nav">
+      <div className={styles.stepNav}>
         <button onClick={prev} disabled={activeStep === 0}>
           &#8592; Prev
         </button>
