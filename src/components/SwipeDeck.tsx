@@ -9,7 +9,10 @@ import {
 } from '@/data/types';
 import { useAuth } from './AuthProvider';
 import CardRenderer from './CardRenderer';
+import StackPicker, { type StackMetaWithCount } from './StackPicker';
 import Link from 'next/link';
+
+const STACK_KEY = 'knoswipe_stack';
 
 interface ProgressEntry {
   card_id: string;
@@ -35,9 +38,48 @@ export default function SwipeDeck() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const markedSeenRef = useRef<Set<string>>(new Set());
 
-  // Fetch cards from API, fallback to static
+  // Stack state
+  const [selectedStack, setSelectedStack] = useState<string | null>(null);
+  const [stackMetas, setStackMetas] = useState<StackMetaWithCount[]>([]);
+  const [showStackPicker, setShowStackPicker] = useState(false);
+
+  // Load stacks and persisted selection
   useEffect(() => {
-    fetch('/api/cards')
+    const saved = localStorage.getItem(STACK_KEY);
+    fetch('/api/stacks')
+      .then((r) => r.json())
+      .then((metas: StackMetaWithCount[]) => {
+        setStackMetas(metas);
+        if (saved && metas.some((m) => m.slug === saved)) {
+          setSelectedStack(saved);
+        } else if (metas.length === 1) {
+          // Auto-select if only one stack
+          setSelectedStack(metas[0].slug);
+          localStorage.setItem(STACK_KEY, metas[0].slug);
+        } else {
+          setShowStackPicker(true);
+        }
+      })
+      .catch(() => {
+        // Fallback: skip picker, fetch all cards
+        setSelectedStack('');
+      });
+  }, []);
+
+  const handleSelectStack = useCallback((slug: string) => {
+    setSelectedStack(slug);
+    localStorage.setItem(STACK_KEY, slug);
+    setShowStackPicker(false);
+    setActiveIndex(0);
+    setShowAllCards(false);
+  }, []);
+
+  // Fetch cards from API with stack filter
+  useEffect(() => {
+    if (selectedStack === null) return; // waiting for stack selection
+    setCardsLoading(true);
+    const params = selectedStack ? `?stack=${encodeURIComponent(selectedStack)}` : '';
+    fetch(`/api/cards${params}`)
       .then((r) => {
         if (!r.ok) throw new Error('API error');
         return r.json();
@@ -47,7 +89,7 @@ export default function SwipeDeck() {
       })
       .catch(() => {})
       .finally(() => setCardsLoading(false));
-  }, []);
+  }, [selectedStack]);
 
   // Fetch progress when logged in
   useEffect(() => {
@@ -167,6 +209,20 @@ export default function SwipeDeck() {
   const currentCard = filteredCards[activeIndex];
   const categories = Object.keys(categoryLabels) as Category[];
 
+  const currentStackMeta = stackMetas.find((m) => m.slug === selectedStack);
+
+  // Show stack picker overlay
+  if (showStackPicker || selectedStack === null) {
+    if (stackMetas.length === 0) {
+      return (
+        <div className="loading-screen">
+          <div className="loading-spinner" />
+        </div>
+      );
+    }
+    return <StackPicker stacks={stackMetas} onSelect={handleSelectStack} />;
+  }
+
   if (cardsLoading || authLoading) {
     return (
       <div className="loading-screen">
@@ -181,6 +237,12 @@ export default function SwipeDeck() {
       <>
         {/* Header */}
         <div className="app-header">
+          {currentStackMeta && (
+            <button className="stack-switcher" onClick={() => setShowStackPicker(true)}>
+              <span className="stack-switcher-dot" style={{ background: currentStackMeta.color }} />
+              {currentStackMeta.name}
+            </button>
+          )}
           <div className="progress-bar">
             <div className="progress-fill" style={{ width: '100%' }} />
           </div>
@@ -263,6 +325,12 @@ export default function SwipeDeck() {
     <>
       {/* Header */}
       <div className="app-header">
+        {currentStackMeta && (
+          <button className="stack-switcher" onClick={() => setShowStackPicker(true)}>
+            <span className="stack-switcher-dot" style={{ background: currentStackMeta.color }} />
+            {currentStackMeta.name}
+          </button>
+        )}
         <div className="progress-bar">
           <div
             className="progress-fill"

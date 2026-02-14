@@ -33,3 +33,6 @@ CREATE TABLE IF NOT EXISTS user_progress (
 
 CREATE INDEX IF NOT EXISTS idx_user_progress_user ON user_progress(user_id);
 CREATE INDEX IF NOT EXISTS idx_cards_category ON cards(category);
+
+ALTER TABLE cards ADD COLUMN IF NOT EXISTS stack TEXT NOT NULL DEFAULT 'euro-manual-hn';
+CREATE INDEX IF NOT EXISTS idx_cards_stack ON cards(stack);

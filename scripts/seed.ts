@@ -1,5 +1,5 @@
 import { Pool } from '@neondatabase/serverless';
-import { cards } from '../src/data/cards';
+import { allStacks } from '../src/data/stacks';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -27,37 +27,42 @@ async function seed() {
   }
   console.log('Schema applied.');
 
-  // Seed cards
-  console.log(`Seeding ${cards.length} cards...`);
-  for (let i = 0; i < cards.length; i++) {
-    const card = cards[i];
-    // Extract a title for the cards table
-    let title: string;
-    if ('title' in card) {
-      title = card.title;
-    } else if ('stem' in card) {
-      title = card.stem.slice(0, 120);
-    } else if ('front' in card) {
-      title = card.front.slice(0, 120);
-    } else if ('sentence' in card) {
-      title = card.sentence.slice(0, 120);
-    } else {
-      title = card.id;
-    }
+  // Seed cards from all stacks
+  let globalSeq = 0;
+  for (const stack of allStacks) {
+    console.log(`Seeding stack "${stack.meta.name}" (${stack.cards.length} cards)...`);
+    for (let i = 0; i < stack.cards.length; i++) {
+      const card = stack.cards[i];
+      // Extract a title for the cards table
+      let title: string;
+      if ('title' in card) {
+        title = card.title;
+      } else if ('stem' in card) {
+        title = card.stem.slice(0, 120);
+      } else if ('front' in card) {
+        title = card.front.slice(0, 120);
+      } else if ('sentence' in card) {
+        title = card.sentence.slice(0, 120);
+      } else {
+        title = card.id;
+      }
 
-    await pool.query(
-      `INSERT INTO cards (id, type, category, difficulty, title, data, sequence)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       ON CONFLICT (id) DO UPDATE SET
-         type = EXCLUDED.type,
-         category = EXCLUDED.category,
-         difficulty = EXCLUDED.difficulty,
-         title = EXCLUDED.title,
-         data = EXCLUDED.data,
-         sequence = EXCLUDED.sequence`,
-      [card.id, card.type, card.category, card.difficulty, title, JSON.stringify(card), i]
-    );
-    console.log(`  + ${card.id}`);
+      await pool.query(
+        `INSERT INTO cards (id, type, category, difficulty, title, data, sequence, stack)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         ON CONFLICT (id) DO UPDATE SET
+           type = EXCLUDED.type,
+           category = EXCLUDED.category,
+           difficulty = EXCLUDED.difficulty,
+           title = EXCLUDED.title,
+           data = EXCLUDED.data,
+           sequence = EXCLUDED.sequence,
+           stack = EXCLUDED.stack`,
+        [card.id, card.type, card.category, card.difficulty, title, JSON.stringify(card), globalSeq, stack.meta.slug]
+      );
+      console.log(`  + ${card.id}`);
+      globalSeq++;
+    }
   }
 
   await pool.end();
